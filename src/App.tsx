@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Banner from './components/Banner';
 
 const Wrapper = styled.section`
 	max-width: 1200px;
@@ -16,6 +17,7 @@ function App() {
 	return (
 		<Wrapper>
 			<Title>React + Typescript + Slick</Title>
+			<Banner />
 		</Wrapper>
 	);
 }
