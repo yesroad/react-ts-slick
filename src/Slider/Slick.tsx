@@ -1,21 +1,42 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import Slider, { Settings } from 'react-slick';
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { nextTick } from 'process';
 
 const SlideWrapper = styled.section`
 	position: relative;
 `;
 
+const PrevButton = styled.button`
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+	width: 43px;
+	height: 74px;
+	font-size: 24px;
+	background: transparent;
+`;
+
+const NextButton = styled(PrevButton)`
+	left: auto;
+	right: 0;
+`;
 
 interface sliderProps {
 	children: React.ReactNode;
 	className?: string;
+	usePrevNextButtons?: boolean;
 }
 
-function Slick({ children, className }: sliderProps) {
+function Slick({
+	children,
+	className,
+	usePrevNextButtons = true,
+}: sliderProps) {
 	const slick = useRef<Slider>(null);
 	const settings = useMemo<Settings>(
 		() => ({
@@ -23,13 +44,30 @@ function Slick({ children, className }: sliderProps) {
 			infinite: true,
 			speed: 300,
 			slidesToShow: 1,
-			adaptiveHeight: true
-		}), []);
+			adaptiveHeight: true,
+		}),
+		[],
+	);
+
+	const slidePrev = useCallback(() => {
+		slick.current?.slickPrev();
+	}, [slick.current]);
+
+	const slideNext = useCallback(() => {
+		slick.current?.slickNext();
+	}, [slick.current]);
+
 	return (
 		<SlideWrapper className={className}>
 			<Slider ref={slick} {...settings}>
 				{children}
 			</Slider>
+			{usePrevNextButtons && (
+				<>
+					<PrevButton onClick={slidePrev}>&lt;</PrevButton>
+					<NextButton onClick={slideNext}>&gt;</NextButton>
+				</>
+			)}
 		</SlideWrapper>
 	);
 }
