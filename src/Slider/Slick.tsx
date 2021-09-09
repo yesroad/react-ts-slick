@@ -4,7 +4,6 @@ import Slider, { Settings } from 'react-slick';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { nextTick } from 'process';
 
 const SlideWrapper = styled.section`
 	position: relative;
@@ -51,11 +50,11 @@ function Slick({
 
 	const slidePrev = useCallback(() => {
 		slick.current?.slickPrev();
-	}, [slick.current]);
+	}, []);
 
 	const slideNext = useCallback(() => {
 		slick.current?.slickNext();
-	}, [slick.current]);
+	}, []);
 
 	return (
 		<SlideWrapper className={className}>
