@@ -29,17 +29,19 @@ interface sliderProps {
 	children: React.ReactNode;
 	className?: string;
 	usePrevNextButtons?: boolean;
+	indicator?: boolean;
 }
 
 function Slick({
 	children,
 	className,
 	usePrevNextButtons = true,
+	indicator = true,
 }: sliderProps) {
 	const slick = useRef<Slider>(null);
 	const settings = useMemo<Settings>(
 		() => ({
-			dots: true,
+			dots: indicator,
 			infinite: true,
 			speed: 300,
 			slidesToShow: 1,
