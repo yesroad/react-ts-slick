@@ -30,6 +30,9 @@ interface sliderProps {
 	className?: string;
 	usePrevNextButtons?: boolean;
 	indicator?: boolean;
+	autoplay?: boolean | number;
+	speed?: number;
+	loop?: boolean;
 }
 
 function Slick({
@@ -37,17 +40,22 @@ function Slick({
 	className,
 	usePrevNextButtons = true,
 	indicator = true,
+	autoplay = true,
+	speed,
+	loop = true,
 }: sliderProps) {
 	const slick = useRef<Slider>(null);
 	const settings = useMemo<Settings>(
 		() => ({
 			dots: indicator,
-			infinite: true,
-			speed: 300,
+			infinite: loop,
+			speed,
 			slidesToShow: 1,
 			adaptiveHeight: true,
+			autoplay: Boolean(autoplay),
+			autoplaySpeed: typeof autoplay === 'boolean' ? 3000 : autoplay,
 		}),
-		[],
+		[autoplay, indicator, loop, speed],
 	);
 
 	const slidePrev = useCallback(() => {
