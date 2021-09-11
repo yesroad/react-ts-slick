@@ -1,46 +1,81 @@
-# Getting Started with Create React App
+# React + Typescipt + Slick
+> react typeScript Slick 슬라이더 적용
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 1. slick 설치
+```
+$ npm i react-slick @types/react-slick slick-carousel
+```
+- `react-slick` : react 에서 사용 가능한 slick 슬라이드
+- `@types/react-slick` : typescript 에서 slick 를 사용하기위한 type interface가 정의되어있다.
+- `slick-carousel` : slick 에서 사용할 css 를 import 하기위함
 
-## Available Scripts
+---
+### 2. 기본 구조
 
-In the project directory, you can run:
+1. `src/slider/Slick.tsx`
+> styled-componetns 사용
+```jsx
+...import
 
-### `npm start`
+const SlideWrapper = styled.section`
+	position: relative;
+`;
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+interface sliderProps {
+  ...types
+}
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+function Slick({
+    ...props
+}: sliderProps) {
+	const settings = useMemo<Settings>(
+		() => ({
+          ...settings
+		}),
+		[],
+	);
+	return (
+		<SlideWrapper className={className}>
+			<Slider {...settings}>{children}</Slider>
+		</SlideWrapper>
+	);
+}
 
-### `npm test`
+export default Slick;
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. `src/components/Item.tsx`
+```jsx
+...import
 
-### `npm run build`
+interface itemsProps {
+  ...types
+}
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+const SliderItem = styled.div`
+  width: 100%;
+  img{
+    max-width: 100%;
+    height: Auto;
+  }
+`;
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+const items:itemsProps[] = [
+  ...itemList 
+]
 
-### `npm run eject`
+function Item() {
+  return (
+    <Slick>
+      {items.map((item, index) => (
+        <SliderItem key={index}>
+          <img src={item.item} alt={item.name} />
+        </SliderItem>
+      ))}
+    </Slick>
+  );
+}
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+export default Item;
+```
