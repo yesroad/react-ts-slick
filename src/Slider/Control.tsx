@@ -4,7 +4,11 @@ interface controlProps {
 	/** 슬라이더 총 개수 */
 	count: number;
 	/** 현재 슬라이드 번호 */
-	currentIndex?: number;
+	currentIndex: number;
+	/** autoplay 여부 */
+	isPlay: boolean;
+	/** autoplay 적용 토글 함수 */
+	onToggle: (played: boolean) => void;
 }
 
 const ControlBoxWrapper = styled.div`
@@ -25,9 +29,29 @@ const Indicator = styled.span`
 	text-align: center;
 `;
 
-function Control({ count, currentIndex }: controlProps) {
+const PlayBtn = styled.button`
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: #fff;
+	&:after {
+		display: block;
+		content: '▶️';
+	}
+	&.playing {
+		&:after {
+			content: 'Ⅱ';
+		}
+	}
+`;
+
+function Control({ count, currentIndex, onToggle, isPlay }: controlProps) {
 	return (
 		<ControlBoxWrapper>
+			<PlayBtn
+				className={`${isPlay ? 'playing' : ''}`}
+				onClick={(played) => onToggle(!played)}
+			/>
 			<Indicator>
 				<strong>{currentIndex}</strong> / {count}
 			</Indicator>

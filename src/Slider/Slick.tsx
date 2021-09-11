@@ -57,8 +57,6 @@ function Slick({
 	loop = true,
 	defaultIndex = 0,
 }: sliderProps) {
-	const [currentIndex, setCurrentIndex] = useState(defaultIndex);
-
 	const slick = useRef<Slider>(null);
 	const settings = useMemo<Settings>(
 		() => ({
@@ -76,15 +74,24 @@ function Slick({
 		[autoplay, isIndicator, loop, speed],
 	);
 
+	const [currentIndex, setCurrentIndex] = useState(defaultIndex);
+	const [isPlaying, setIsPlaying] = useState(settings.autoplay || false);
+
+	const onPause = useCallback(() => {
+		slick.current?.slickPause();
+		setIsPlaying(false);
+	}, [setIsPlaying]);
+
+	const onPlay = useCallback(() => {
+		slick.current?.slickPlay();
+		setIsPlaying(true);
+	}, [setIsPlaying]);
+
 	/** 이전 슬라이드로 이동 */
-	const slidePrev = useCallback(() => {
-		slick.current?.slickPrev();
-	}, []);
+	const slidePrev = () => slick.current?.slickPrev();
 
 	/** 다음 슬라이드로 이동 */
-	const slideNext = useCallback(() => {
-		slick.current?.slickNext();
-	}, []);
+	const slideNext = () => slick.current?.slickNext();
 
 	/** 슬라이드 총 개수 */
 	const count = useMemo(() => Children.count(children), [children]);
@@ -100,7 +107,14 @@ function Slick({
 					<NextButton onClick={slideNext}>&gt;</NextButton>
 				</>
 			)}
-			{isControl && <Control currentIndex={currentIndex + 1} count={count} />}
+			{isControl && (
+				<Control
+					isPlay={isPlaying}
+					onToggle={() => (isPlaying ? onPause() : onPlay())}
+					currentIndex={currentIndex + 1}
+					count={count}
+				/>
+			)}
 		</SlideWrapper>
 	);
 }
